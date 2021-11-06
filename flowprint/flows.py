@@ -58,6 +58,8 @@ class Flow(object):
         self.lengths    = list()
         # Initialise packet timestamps
         self.timestamps = list()
+        self.streamIdentifier = -1
+
 
     ########################################################################
     #                        Add new packet to flow                        #
@@ -102,7 +104,11 @@ class Flow(object):
         # Set timestamps and lengths
         self.timestamps.append(float(packet[3]))
         self.lengths   .append( int(packet[4]) if packet[5] == self.src else
-                               -int(packet[4]))
+                                -int(packet[4]))
+
+        if self.streamIdentifier == -1 : self.streamIdentifier = packet[2]
+        elif self.streamIdentifier != packet[2]: raise ValueError("Multiple stream identifiers in a single flow")
+
 
         # Return self
         return self
