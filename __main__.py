@@ -33,7 +33,7 @@ def readFiles():
 
 if __name__ == "__main__":
 
-    f = open("datasets/Unmodified.csv", "w")
+    f = open("datasets/AvgPacketLength.csv", "w")
     f.truncate()
     f.close()
 
@@ -42,7 +42,7 @@ if __name__ == "__main__":
     else:
         X,y = readFiles()
 
-    for x in range(100):
+    for x in range(2):
         print("iteration {}".format(x))
 
         X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.5)
@@ -69,18 +69,6 @@ if __name__ == "__main__":
         # # This returns both the fingerprints and stores them in the flowprint object
         # fingerprints = flowprint.load('./fingerprints.json')
 
-
-        # Create FlowPrint object
-        flowprint = FlowPrint(
-            batch       = 300,
-            window      = 30,
-            correlation = 0.1,
-            similarity  = 0.9
-        )
-
-        # Fit FlowPrint with flows and labels
-        flowprint.fit(X_train, y_train)
-
         # Recognise which app produced each flow
         y_recognize = flowprint.recognize(fp_test)
         # Detect previously unseen apps
@@ -90,7 +78,7 @@ if __name__ == "__main__":
         # Print report with 4 digit precision
         report = classification_report(y_test, y_recognize, digits=4, output_dict=True)
 
-        with open('datasets/Unmodified.csv', 'a', newline='') as csvfile:
+        with open('datasets/AvgPacketLength.csv', 'a', newline='') as csvfile:
             fieldNames = ['accuracy/recall', 'precision', 'f1-score']
             writer = csv.DictWriter(csvfile, fieldnames=fieldNames)
             if x == 0:

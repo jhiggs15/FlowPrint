@@ -56,6 +56,9 @@ class Flow(object):
         self.certificate = None
         # Initialise packet lengths
         self.lengths    = list()
+        self.averagePacketLength = 0
+        self.totalPacketLength = 0
+        self.numberOfPackets = 0
         # Initialise packet timestamps
         self.timestamps = list()
 
@@ -101,8 +104,10 @@ class Flow(object):
 
         # Set timestamps and lengths
         self.timestamps.append(float(packet[3]))
-        self.lengths   .append( int(packet[4]) if packet[5] == self.src else
-                               -int(packet[4]))
+        self.numberOfPackets += 1
+        self.totalPacketLength += int(packet[4])
+        self.averagePacketLength = self.totalPacketLength / self.numberOfPackets
+
 
         # Return self
         return self

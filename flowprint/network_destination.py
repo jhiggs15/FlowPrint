@@ -36,8 +36,7 @@ class NetworkDestination(object):
         # Initialise variables
         self.identifier   = identifier
         self.samples      = []
-        self.destinations = set()
-        self.certificates = set()
+        self.averagePacketLengths = set()
         self.labels       = Counter()
 
         # Add each datapoint
@@ -63,8 +62,7 @@ class NetworkDestination(object):
         self.samples.append(X)
         self.labels.update([y])
         # Update pointers
-        self.destinations.add(X.destination)
-        self.certificates.add(X.certificate)
+        self.averagePacketLengths.add(X.averagePacketLength)
 
 
     def merge(self, other):
@@ -80,8 +78,7 @@ class NetworkDestination(object):
             # Merge two NetworkDestinations
             self.samples.extend(other.samples)
             # Merge pointers
-            self.destinations |= other.destinations
-            self.certificates |= other.certificates
+            self.averagePacketLengths |= other.averagePacketLengths
             self.labels += other.labels
 
     ########################################################################
@@ -109,6 +106,5 @@ class NetworkDestination(object):
 
     def __str__(self):
         """Returns string presentation of self."""
-        return "NetworkDestination [{:4}] [size={:4}] [IPs={}] [labels={}]".\
-                format(self.identifier, len(self.samples),
-                list(sorted(self.destinations)), self.labels)
+        return "NetworkDestination {}".\
+                format(self.averagePacketLengths)
