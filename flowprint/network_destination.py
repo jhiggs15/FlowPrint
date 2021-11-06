@@ -65,7 +65,7 @@ class NetworkDestination(object):
         self.samples.append(X)
         self.labels.update([y])
         # Update pointers
-        self.packetLengths.add(numpy.sum(X.lengths))
+        self.packetLengths.add(X.lengths)
 
 
     def merge(self, other):

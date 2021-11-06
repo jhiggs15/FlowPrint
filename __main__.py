@@ -42,7 +42,7 @@ if __name__ == "__main__":
     else:
         X,y = readFiles()
 
-    for x in range(2):
+    for x in range(100):
         print("iteration {}".format(x))
 
         X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.5)

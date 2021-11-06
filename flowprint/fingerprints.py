@@ -196,7 +196,7 @@ class FingerprintGenerator(object):
 
         # Apply mapping
         prediction = np.array([
-            mapping_fingerprints.get(numpy.sum(x.lengths),Fingerprint()) for x in X
+            mapping_fingerprints.get(x.lengths,Fingerprint()) for x in X
         ])
 
         ####################################################################

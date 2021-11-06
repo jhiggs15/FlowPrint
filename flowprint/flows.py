@@ -55,7 +55,7 @@ class Flow(object):
         # Initialise certificates
         self.certificate = None
         # Initialise packet lengths
-        self.lengths    = list()
+        self.lengths    = 0
         # Initialise packet timestamps
         self.timestamps = list()
 
@@ -101,8 +101,7 @@ class Flow(object):
 
         # Set timestamps and lengths
         self.timestamps.append(float(packet[3]))
-        self.lengths   .append( int(packet[4]) if packet[5] == self.src else
-                               -int(packet[4]))
+        self.lengths   += int(packet[4]) + self.lengths
 
         # Return self
         return self

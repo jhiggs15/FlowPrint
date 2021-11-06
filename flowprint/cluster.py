@@ -85,7 +85,7 @@ class Cluster(object):
         for sample, label in zip(X, y):
 
             # Extract values
-            packetLengths = numpy.sum(sample.lengths)
+            packetLengths = sample.lengths
 
             # Get the number of matching clusters
             clusters = [self.dict_packetLengths.get(packetLengths)]
@@ -161,7 +161,7 @@ class Cluster(object):
                 if no cluster could be matched.
             """
         # Get matching cluster or -1
-        return self.dict_packetLengths.get(numpy.sum(X.lengths), NetworkDestination(-1)).identifier
+        return self.dict_packetLengths.get(X.lengths, NetworkDestination(-1)).identifier
 
     def fit_predict(self, X):
         """Fit and predict cluster with given samples.
