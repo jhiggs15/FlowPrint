@@ -24,18 +24,16 @@ class Fingerprint(frozenset):
     def __new__(cls, *args):
         """FlowPrint fingerprint: a frozenset of NetworkDestinations."""
         # Initialise attributes
-        destinations = set()
         certificates = set()
         n_flows      = 0
 
         # Retrieve attributes from NetworkDestinations
         for cluster in set(*args):
-            destinations |= cluster.destinations
             certificates |= cluster.certificates
             n_flows += len(cluster.samples)
 
         # Create frozenset of destination identifiers
-        self = super(Fingerprint, cls).__new__(cls, destinations | certificates)
+        self = super(Fingerprint, cls).__new__(cls, certificates)
 
         # Set number of flows
         self.__setattr__('n_flows', n_flows)
@@ -133,10 +131,9 @@ class Fingerprint(frozenset):
                 Fingerprint object as read from dictionary
             """
         # Get destinations and certificates from dictionary
-        dsts  = set([tuple(x) for x in dictionary.get('destinations', [])])
         certs = set([      x  for x in dictionary.get('certificates', [])])
         # Create frozenset of destination identifiers
-        self = super(Fingerprint, type(self)).__new__(type(self), dsts | certs)
+        self = super(Fingerprint, type(self)).__new__(type(self), certs)
         # Set number of flows
         self.__setattr__('n_flows', dictionary.get('n_flows', 0))
         # Return self

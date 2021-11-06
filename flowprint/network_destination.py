@@ -36,7 +36,6 @@ class NetworkDestination(object):
         # Initialise variables
         self.identifier   = identifier
         self.samples      = []
-        self.destinations = set()
         self.certificates = set()
         self.labels       = Counter()
 
@@ -63,7 +62,6 @@ class NetworkDestination(object):
         self.samples.append(X)
         self.labels.update([y])
         # Update pointers
-        self.destinations.add(X.destination)
         self.certificates.add(X.certificate)
 
 
@@ -80,7 +78,6 @@ class NetworkDestination(object):
             # Merge two NetworkDestinations
             self.samples.extend(other.samples)
             # Merge pointers
-            self.destinations |= other.destinations
             self.certificates |= other.certificates
             self.labels += other.labels
 
