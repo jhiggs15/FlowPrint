@@ -1,4 +1,6 @@
 from itertools               import combinations
+
+import numpy
 import numpy as np
 
 try:
@@ -189,14 +191,12 @@ class FingerprintGenerator(object):
         mapping_fingerprints = dict()
         # Map destination to largest fingerprint by (#destinations, #flows)
         for fingerprint in sorted(fingerprints):
-            for destination in fingerprint:
-                mapping_fingerprints[destination] = fingerprint
+            for packetLength in fingerprint:
+                mapping_fingerprints[packetLength] = fingerprint
 
         # Apply mapping
         prediction = np.array([
-            mapping_fingerprints.get(x.destination,
-            mapping_fingerprints.get(x.certificate,
-            Fingerprint())) for x in X
+            mapping_fingerprints.get(numpy.sum(x.lengths),Fingerprint()) for x in X
         ])
 
         ####################################################################

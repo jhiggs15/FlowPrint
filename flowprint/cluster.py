@@ -2,6 +2,7 @@ import itertools
 import json
 import matplotlib.pyplot as plt
 import networkx as nx
+import numpy
 import numpy as np
 
 try:
@@ -49,8 +50,7 @@ class Cluster(object):
         self.counter = 0
 
         # Dictionaries of destination identifiers -> cluster
-        self.dict_destination = dict()
-        self.dict_certificate = dict()
+        self.dict_packetLengths = dict()
 
         # Load cluster if necessary
         if load is not None:
@@ -85,12 +85,10 @@ class Cluster(object):
         for sample, label in zip(X, y):
 
             # Extract values
-            certificate = sample.certificate
-            destination = sample.destination
+            packetLengths = numpy.sum(sample.lengths)
 
             # Get the number of matching clusters
-            clusters = [self.dict_certificate.get(certificate),
-                        self.dict_destination.get(destination)]
+            clusters = [self.dict_packetLengths.get(packetLengths)]
 
             # Case 1: Multiple matches
             # Check for multiple matching slices
@@ -110,12 +108,9 @@ class Cluster(object):
                         # Add samples from old cluster to new cluster
                         cluster.merge(c)
                         # Reset dictionaries to point to new cluster
-                        for value in c.certificates:
+                        for value in c.packetLengths:
                             if value is not None:
-                                self.dict_certificate[value] = cluster
-                        for value in c.destinations:
-                            if value is not None:
-                                self.dict_destination[value] = cluster
+                                self.dict_packetLengths[value] = cluster
 
             # Case 2: Single or no matches
             else:
@@ -127,10 +122,9 @@ class Cluster(object):
             # Add datapoint to cluster
             cluster.add(sample, label)
             # Point dictionaries to new cluster
-            if certificate is not None:
-                self.dict_certificate[certificate] = cluster
-            if destination is not None:
-                self.dict_destination[destination] = cluster
+            if packetLengths is not None:
+                self.dict_packetLengths[packetLengths] = cluster
+
 
         # Return result
         return self
@@ -167,9 +161,7 @@ class Cluster(object):
                 if no cluster could be matched.
             """
         # Get matching cluster or -1
-        return self.dict_destination.get(X.destination,
-               self.dict_certificate.get(X.certificate,
-               NetworkDestination(-1))).identifier
+        return self.dict_packetLengths.get(numpy.sum(X.lengths), NetworkDestination(-1)).identifier
 
     def fit_predict(self, X):
         """Fit and predict cluster with given samples.
@@ -212,8 +204,7 @@ class Cluster(object):
             result : set
                 Set of NetworkDestinations in cluster.
             """
-        clusters  = set(self.dict_certificate.values())
-        clusters |= set(self.dict_destination.values())
+        clusters  = set(self.dict_packetLengths.values())
         return clusters
 
     def cluster_dict(self):
