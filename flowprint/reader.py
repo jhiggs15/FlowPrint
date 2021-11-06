@@ -1,3 +1,4 @@
+import numpy
 from cryptography import x509
 from cryptography.hazmat.backends import default_backend
 import glob
@@ -254,8 +255,8 @@ class Reader(object):
                  None]
 
             # Check whether SSL/TLS certificate is in packet
-            if "SSL" in packet and\
-               packet.ssl.get("handshake_certificate") is not None:
+            if "SSL" in packet and \
+                    packet.ssl.get("handshake_certificate") is not None:
                 # Get certificate
                 cert = packet.ssl.get('handshake_certificate')
                 # Parse cert to bytes

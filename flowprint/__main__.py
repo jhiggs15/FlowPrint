@@ -27,8 +27,12 @@ def fingerprint(flowprint, args):
 
     # Parse files - if necessary
     if args.pcaps:
+        listOfFiles = list()
+        print(args.pcaps[0])
+        for filename in os.listdir(args.pcaps[0]):
+            listOfFiles.append("{}/{}".format(args.pcaps[0], filename))
         # Process data
-        X_, y_ = preprocessor.process(args.pcaps, args.pcaps)
+        X_, y_ = preprocessor.process(listOfFiles[:5], listOfFiles[:5])
         # Add data to datapoints
         X.append(X_)
         y.append(y_)
@@ -116,9 +120,9 @@ if __name__ == "__main__":
 
     # Create argument parser
     parser = argparse.ArgumentParser(
-                prog="flowprint.py",
-                description="Flowprint: Semi-Supervised Mobile-App\nFingerprinting on Encrypted Network Traffic",
-                formatter_class=argformat.StructuredFormatter)
+        prog="flowprint.py",
+        description="Flowprint: Semi-Supervised Mobile-App\nFingerprinting on Encrypted Network Traffic",
+        formatter_class=argformat.StructuredFormatter)
 
     # Output arguments
     group_output = parser.add_mutually_exclusive_group(required=False)
@@ -154,10 +158,10 @@ if __name__ == "__main__":
     ########################################################################
 
     # --fingerprint requires --pcaps or --read
-    if not args.detection and\
-       not args.recognition and\
-       not args.pcaps and\
-       not args.read:
+    if not args.detection and \
+            not args.recognition and \
+            not args.pcaps and \
+            not args.read:
         # Give help message
         print(parser.format_help())
         # Throw exception
@@ -190,6 +194,7 @@ if __name__ == "__main__":
     ########################################################################
     # Fingerprint mode
     if not args.detection and not args.recognition:
+        # if
         fingerprint(flowprint, args)
     # Detection/Recognition mode
     else:
@@ -201,8 +206,8 @@ if __name__ == "__main__":
         flowprint.load(*args.train)
         # Load test fingerprints and labels from file
         X_test, y_test = zip(*
-            flowprint.load(*args.test, store=False).items()
-        )
+                             flowprint.load(*args.test, store=False).items()
+                             )
 
         ################################################################
         #                         Execute mode                         #
@@ -222,7 +227,7 @@ if __name__ == "__main__":
         y_current = None
         # Loop over all fingerprints sorted by input label
         for fp, y_test_, y_pred_ in sorted(zip(X_test, y_test, prediction),
-                                            key=lambda x: list(x[1])):
+                                           key=lambda x: list(x[1])):
             # Get label of fingerprint
             y_test_ = list(y_test_)[0]
             # Print label if new one is found

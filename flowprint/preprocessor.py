@@ -1,3 +1,4 @@
+import numpy
 import numpy as np
 import pickle
 import sys
@@ -72,9 +73,9 @@ class Preprocessor(object):
                 print("Reading {} failed: '{}'".format(file, ex), file=sys.stderr)
                 continue
             # Append data to X
-            X.append(data)
+            X.append(data)  # TODO : appends all flows to X
             # Append label to y
-            y.append(np.array([label] * data.shape[0]))
+            y.append(np.array([label] * data.shape[0]))  # TODO : file names
 
         # Filter empty entries from array
         X = list(filter(lambda x: x.shape[0] != 0, X))
@@ -109,9 +110,10 @@ class Preprocessor(object):
                 Dictionary of flow_key -> flow.
             """
         # Read packets
-        result = self.reader.read(infile)
+        result = self.reader.read(infile)  # TODO : gathers flows
+
         # Combine packets into flows
-        result = self.flow_generator.combine(result)
+        result = self.flow_generator.combine(result)  # TODO : converts them to flow objects
         # Return result
         return result
 
@@ -157,5 +159,5 @@ class Preprocessor(object):
 
 if __name__ == "__main__":
     preprocessor = Preprocessor(verbose=True)
-    X, y = preprocessor.process('../data/ReCon/pcaps/at.ner.lepsWorld2/372.pcap')
+    X, y = preprocessor.process('./datasets/')
     print(len(flows))
