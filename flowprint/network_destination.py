@@ -37,7 +37,6 @@ class NetworkDestination(object):
         self.identifier   = identifier
         self.samples      = []
         self.destinations = set()
-        self.certificates = set()
         self.labels       = Counter()
 
         # Add each datapoint
@@ -64,7 +63,6 @@ class NetworkDestination(object):
         self.labels.update([y])
         # Update pointers
         self.destinations.add(X.destination)
-        self.certificates.add(X.certificate)
 
 
     def merge(self, other):
@@ -81,7 +79,6 @@ class NetworkDestination(object):
             self.samples.extend(other.samples)
             # Merge pointers
             self.destinations |= other.destinations
-            self.certificates |= other.certificates
             self.labels += other.labels
 
     ########################################################################
