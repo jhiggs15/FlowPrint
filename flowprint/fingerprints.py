@@ -189,12 +189,12 @@ class FingerprintGenerator(object):
         mapping_fingerprints = dict()
         # Map destination to largest fingerprint by (#destinations, #flows)
         for fingerprint in sorted(fingerprints):
-            for averagePacketLength in fingerprint:
-                mapping_fingerprints[averagePacketLength] = fingerprint
+            for averagePacketTime in fingerprint:
+                mapping_fingerprints[averagePacketTime] = fingerprint
 
         # Apply mapping
         prediction = np.array([
-            mapping_fingerprints.get(x.averagePacketLength, Fingerprint()) for x in X
+            mapping_fingerprints.get(x.averagePacketTime, Fingerprint()) for x in X
         ])
 
         ####################################################################

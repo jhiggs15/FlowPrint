@@ -33,7 +33,7 @@ def readFiles():
 
 if __name__ == "__main__":
 
-    f = open("datasets/AvgPacketLength.csv", "w")
+    f = open("datasets/AvgPacketTime.csv", "w")
     f.truncate()
     f.close()
 
@@ -78,7 +78,7 @@ if __name__ == "__main__":
         # Print report with 4 digit precision
         report = classification_report(y_test, y_recognize, digits=4, output_dict=True)
 
-        with open('datasets/AvgPacketLength.csv', 'a', newline='') as csvfile:
+        with open('datasets/AvgPacketTime.csv', 'a', newline='') as csvfile:
             fieldNames = ['accuracy/recall', 'precision', 'f1-score']
             writer = csv.DictWriter(csvfile, fieldnames=fieldNames)
             if x == 0:

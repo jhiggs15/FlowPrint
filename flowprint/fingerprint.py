@@ -24,16 +24,16 @@ class Fingerprint(frozenset):
     def __new__(cls, *args):
         """FlowPrint fingerprint: a frozenset of NetworkDestinations."""
         # Initialise attributes
-        averagePacketLengths = set()
+        averagePacketTimes = set()
         n_flows      = 0
 
         # Retrieve attributes from NetworkDestinations
         for cluster in set(*args):
-            averagePacketLengths |= cluster.averagePacketLengths
+            averagePacketTimes |= cluster.averagePacketTimes
             n_flows += len(cluster.samples)
 
         # Create frozenset of destination identifiers
-        self = super(Fingerprint, cls).__new__(cls, averagePacketLengths)
+        self = super(Fingerprint, cls).__new__(cls, averagePacketTimes)
 
         # Set number of flows
         self.__setattr__('n_flows', n_flows)

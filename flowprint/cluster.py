@@ -49,7 +49,7 @@ class Cluster(object):
         self.counter = 0
 
         # Dictionaries of destination identifiers -> cluster
-        self.dict_avgPacketLength = dict()
+        self.dict_avgPacketTime = dict()
 
         # Load cluster if necessary
         if load is not None:
@@ -84,10 +84,10 @@ class Cluster(object):
         for sample, label in zip(X, y):
 
             # Extract values
-            averagePacketLength = sample.averagePacketLength
+            averagePacketTime = sample.averagePacketTime
 
             # Get the number of matching clusters
-            clusters = [self.dict_avgPacketLength.get(averagePacketLength)]
+            clusters = [self.dict_avgPacketTime.get(averagePacketTime)]
 
             # Case 1: Multiple matches
             # Check for multiple matching slices
@@ -107,9 +107,9 @@ class Cluster(object):
                         # Add samples from old cluster to new cluster
                         cluster.merge(c)
                         # Reset dictionaries to point to new cluster
-                        for value in c.averagePacketLengths:
+                        for value in c.averagePacketTimes:
                             if value is not None:
-                                self.dict_avgPacketLength[value] = cluster
+                                self.dict_avgPacketTime[value] = cluster
 
 
             # Case 2: Single or no matches
@@ -122,8 +122,8 @@ class Cluster(object):
             # Add datapoint to cluster
             cluster.add(sample, label)
             # Point dictionaries to new cluster
-            if averagePacketLength is not None:
-                self.dict_avgPacketLength[averagePacketLength] = cluster
+            if averagePacketTime is not None:
+                self.dict_avgPacketTime[averagePacketTime] = cluster
 
         # Return result
         return self
@@ -160,7 +160,7 @@ class Cluster(object):
                 if no cluster could be matched.
             """
         # Get matching cluster or -1
-        return self.dict_avgPacketLength.get(X.averagePacketLength, NetworkDestination(-1)).identifier
+        return self.dict_avgPacketTime.get(X.averagePacketTime, NetworkDestination(-1)).identifier
 
     def fit_predict(self, X):
         """Fit and predict cluster with given samples.
@@ -203,7 +203,7 @@ class Cluster(object):
             result : set
                 Set of NetworkDestinations in cluster.
             """
-        clusters  = set(self.dict_avgPacketLength.values())
+        clusters  = set(self.dict_avgPacketTime.values())
         return clusters
 
     def cluster_dict(self):

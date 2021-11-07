@@ -36,7 +36,7 @@ class NetworkDestination(object):
         # Initialise variables
         self.identifier   = identifier
         self.samples      = []
-        self.averagePacketLengths = set()
+        self.averagePacketTimes= set()
         self.labels       = Counter()
 
         # Add each datapoint
@@ -62,7 +62,7 @@ class NetworkDestination(object):
         self.samples.append(X)
         self.labels.update([y])
         # Update pointers
-        self.averagePacketLengths.add(X.averagePacketLength)
+        self.averagePacketTimes.add(X.averagePacketTime)
 
 
     def merge(self, other):
@@ -78,7 +78,7 @@ class NetworkDestination(object):
             # Merge two NetworkDestinations
             self.samples.extend(other.samples)
             # Merge pointers
-            self.averagePacketLengths |= other.averagePacketLengths
+            self.averagePacketTimes |= other.averagePacketTimes
             self.labels += other.labels
 
     ########################################################################
