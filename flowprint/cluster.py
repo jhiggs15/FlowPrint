@@ -50,7 +50,7 @@ class Cluster(object):
         self.counter = 0
 
         # Dictionaries of destination identifiers -> cluster
-        self.dict_packetLengths = dict()
+        self.dict_packetTimes = dict()
 
         # Load cluster if necessary
         if load is not None:
@@ -85,10 +85,10 @@ class Cluster(object):
         for sample, label in zip(X, y):
 
             # Extract values
-            packetLengths = sample.lengths
+            packetTimes = sample.lengths
 
             # Get the number of matching clusters
-            clusters = [self.dict_packetLengths.get(packetLengths)]
+            clusters = [self.dict_packetTimes.get(packetTimes)]
 
             # Case 1: Multiple matches
             # Check for multiple matching slices
@@ -108,9 +108,9 @@ class Cluster(object):
                         # Add samples from old cluster to new cluster
                         cluster.merge(c)
                         # Reset dictionaries to point to new cluster
-                        for value in c.packetLengths:
+                        for value in c.packetTimes:
                             if value is not None:
-                                self.dict_packetLengths[value] = cluster
+                                self.dict_packetTimes[value] = cluster
 
             # Case 2: Single or no matches
             else:
@@ -122,8 +122,8 @@ class Cluster(object):
             # Add datapoint to cluster
             cluster.add(sample, label)
             # Point dictionaries to new cluster
-            if packetLengths is not None:
-                self.dict_packetLengths[packetLengths] = cluster
+            if packetTimes is not None:
+                self.dict_packetTimes[packetTimes] = cluster
 
 
         # Return result
@@ -161,7 +161,7 @@ class Cluster(object):
                 if no cluster could be matched.
             """
         # Get matching cluster or -1
-        return self.dict_packetLengths.get(X.lengths, NetworkDestination(-1)).identifier
+        return self.dict_packetTimes.get(X.lengths, NetworkDestination(-1)).identifier
 
     def fit_predict(self, X):
         """Fit and predict cluster with given samples.
@@ -204,7 +204,7 @@ class Cluster(object):
             result : set
                 Set of NetworkDestinations in cluster.
             """
-        clusters  = set(self.dict_packetLengths.values())
+        clusters  = set(self.dict_packetTimes.values())
         return clusters
 
     def cluster_dict(self):

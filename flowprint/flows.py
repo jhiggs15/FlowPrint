@@ -101,7 +101,7 @@ class Flow(object):
 
         # Set timestamps and lengths
         self.timestamps.append(float(packet[3]))
-        self.lengths   += int(packet[4]) + self.lengths
+        self.lengths   += float(packet[3]) + self.lengths
 
         # Return self
         return self
