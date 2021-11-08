@@ -56,6 +56,9 @@ class Flow(object):
         self.certificate = None
         # Initialise packet lengths
         self.lengths    = list()
+        self.avgWindowSize    = 0
+        self.windowSizeTotal = 0
+        self.packetCount = 0
         # Initialise packet timestamps
         self.timestamps = list()
 
@@ -104,6 +107,11 @@ class Flow(object):
         self.lengths   .append( int(packet[4]) if packet[5] == self.src else
                                -int(packet[4]))
 
+        if packet[10] is not None :
+            self.windowSizeTotal += int(packet[10])
+            self.packetCount += 1
+
+        if self.packetCount != 0 : self.avgWindowSize = self.windowSizeTotal / self.packetCount
         # Return self
         return self
 

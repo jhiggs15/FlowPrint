@@ -106,6 +106,7 @@ class Reader(object):
                 7) TCP/UDP packet source port
                 8) TCP/UDP packet destination port
                 9) SSL/TLS certificate if exists, else None
+                10) TCP window Size
             """
         # Get tshark version
         version = self.tshark_version()
@@ -129,6 +130,8 @@ class Reader(object):
                    "-e", "udp.dstport",
                    "-e", "ip.len",
                    "-e", certificate]
+
+        command2 = ["tshark", "-r", path, "-Tfields", "-e", "tcp.window_size_value"]
         # Initialise result
         result = list()
 
@@ -137,18 +140,33 @@ class Reader(object):
         # Get output
         out, err = process.communicate()
 
+        process2 = Popen(command2, stdout=PIPE, stderr=PIPE)
+        # Get output
+        out2, err2 = process2.communicate()
+
+        if err2:
+            warnings.warn("Error reading file: '{}'".format(
+            err2.decode('utf-8')))
+
         # Give warning message if any
         if err:
             warnings.warn("Error reading file: '{}'".format(
                 err.decode('utf-8')))
 
+
+        listOfPackets = out2.decode('utf-8').split('\n');
         # Read each packet
+        print(listOfPackets)
+        packetNum = 0
         for packet in filter(None, out.decode('utf-8').split('\n')):
             # Get all data from packets
             packet = packet.split()
 
             # Perform check on packets
             if len(packet) < 8: continue
+
+
+
 
             # Perform check on multiple ip addresses
             packet[3] = packet[3].split(',')[0]
@@ -168,8 +186,12 @@ class Reader(object):
             else:
                 packet.append(None)
 
+            if listOfPackets[packetNum] == '' : packet.append(None)
+            else: packet.append(listOfPackets[packetNum])
             # Add packet to result
             result.append([path] + packet)
+
+            packetNum += 1
 
         # Get result as numpy array
         result = np.asarray(result)
@@ -182,8 +204,9 @@ class Reader(object):
         protocols = {'17': 'udp', '6': 'tcp'}
         result[:, 3] = [protocols.get(x, 'unknown') for x in result[:, 3]]
 
+
         # Return in original order
-        return result[:, [0, 3, 2, 1, 8, 4, 6, 5, 7, 9]]
+        return result[:, [0, 3, 2, 1, 8, 4, 6, 5, 7, 9, 10]]
 
 
     def read_pyshark(self, path):
