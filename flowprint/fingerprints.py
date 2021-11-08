@@ -189,12 +189,12 @@ class FingerprintGenerator(object):
         mapping_fingerprints = dict()
         # Map destination to largest fingerprint by (#destinations, #flows)
         for fingerprint in sorted(fingerprints):
-            for source in fingerprint:
-                mapping_fingerprints[source] = fingerprint
+            for dstIP in fingerprint:
+                mapping_fingerprints[dstIP] = fingerprint
 
         # Apply mapping
         prediction = np.array([
-            mapping_fingerprints.get(x.source, Fingerprint()) for x in X
+            mapping_fingerprints.get(x.dst, Fingerprint()) for x in X
         ])
 
         ####################################################################
