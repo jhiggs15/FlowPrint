@@ -49,7 +49,7 @@ class Cluster(object):
         self.counter = 0
 
         # Dictionaries of destination identifiers -> cluster
-        self.dict_dstPort = dict()
+        self.dict_srcPort = dict()
 
         # Load cluster if necessary
         if load is not None:
@@ -84,10 +84,10 @@ class Cluster(object):
         for sample, label in zip(X, y):
 
             # Extract values
-            dstPort = sample.dport
+            srcPort = sample.sport
 
             # Get the number of matching clusters
-            clusters = [self.dict_dstPort.get(dstPort)]
+            clusters = [self.dict_srcPort.get(srcPort)]
 
             # Case 1: Multiple matches
             # Check for multiple matching slices
@@ -107,9 +107,9 @@ class Cluster(object):
                         # Add samples from old cluster to new cluster
                         cluster.merge(c)
                         # Reset dictionaries to point to new cluster
-                        for value in c.dstPorts:
+                        for value in c.srcPorts:
                             if value is not None:
-                                self.dict_dstPort[value] = cluster
+                                self.dict_srcPort[value] = cluster
 
 
             # Case 2: Single or no matches
@@ -122,8 +122,8 @@ class Cluster(object):
             # Add datapoint to cluster
             cluster.add(sample, label)
             # Point dictionaries to new cluster
-            if dstPort is not None:
-                self.dict_dstPort[dstPort] = cluster
+            if srcPort is not None:
+                self.dict_srcPort[srcPort] = cluster
 
         # Return result
         return self
@@ -160,7 +160,7 @@ class Cluster(object):
                 if no cluster could be matched.
             """
         # Get matching cluster or -1
-        return self.dict_dstPort.get(X.dport, NetworkDestination(-1)).identifier
+        return self.dict_srcPort.get(X.sport, NetworkDestination(-1)).identifier
 
     def fit_predict(self, X):
         """Fit and predict cluster with given samples.
@@ -203,7 +203,7 @@ class Cluster(object):
             result : set
                 Set of NetworkDestinations in cluster.
             """
-        clusters  = set(self.dict_dstPort.values())
+        clusters  = set(self.dict_srcPort.values())
         return clusters
 
     def cluster_dict(self):
