@@ -258,13 +258,13 @@ class CrossCorrelationGraph(object):
         # Fill non-dense graph with edges
         for node in self.graph:
             # Loop over network destinations for each node in graph
-            for dstIP in self.mapping.get(node):
+            for srcIP in self.mapping.get(node):
                 # Add all edges in between nodes
                 for destination in self.mapping.get(node):
                     # No self-loops
-                    if dstIP == destination: continue
-                    # Add all dstIP-destination edges
-                    graph.add_edge(dstIP, destination, weight=1)
+                    if srcIP == destination: continue
+                    # Add all srcIP-destination edges
+                    graph.add_edge(srcIP, destination, weight=1)
 
                 # Add all edges to other nodes
                 for connected in nx.neighbors(self.graph, node):
@@ -273,7 +273,7 @@ class CrossCorrelationGraph(object):
                     # Get all destinations
                     for destination in self.mapping.get(connected):
                         graph.add_edge(
-                            dstIP,
+                            srcIP,
                             destination,
                             weight=data.get('weight')
                         )

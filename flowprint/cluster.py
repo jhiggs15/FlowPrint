@@ -49,7 +49,7 @@ class Cluster(object):
         self.counter = 0
 
         # Dictionaries of destination identifiers -> cluster
-        self.dict_dstIP = dict()
+        self.dict_srcIP = dict()
 
         # Load cluster if necessary
         if load is not None:
@@ -84,10 +84,10 @@ class Cluster(object):
         for sample, label in zip(X, y):
 
             # Extract values
-            dstIP = sample.dst
+            srcIP = sample.src
 
             # Get the number of matching clusters
-            clusters = [self.dict_dstIP.get(dstIP)]
+            clusters = [self.dict_srcIP.get(srcIP)]
 
             # Case 1: Multiple matches
             # Check for multiple matching slices
@@ -107,9 +107,9 @@ class Cluster(object):
                         # Add samples from old cluster to new cluster
                         cluster.merge(c)
                         # Reset dictionaries to point to new cluster
-                        for value in c.dstIPs:
+                        for value in c.srcIPs:
                             if value is not None:
-                                self.dict_dstIP[value] = cluster
+                                self.dict_srcIP[value] = cluster
 
 
             # Case 2: Single or no matches
@@ -122,8 +122,8 @@ class Cluster(object):
             # Add datapoint to cluster
             cluster.add(sample, label)
             # Point dictionaries to new cluster
-            if dstIP is not None:
-                self.dict_dstIP[dstIP] = cluster
+            if srcIP is not None:
+                self.dict_srcIP[srcIP] = cluster
 
         # Return result
         return self
@@ -160,7 +160,7 @@ class Cluster(object):
                 if no cluster could be matched.
             """
         # Get matching cluster or -1
-        return self.dict_dstIP.get(X.dst, NetworkDestination(-1)).identifier
+        return self.dict_srcIP.get(X.src, NetworkDestination(-1)).identifier
 
     def fit_predict(self, X):
         """Fit and predict cluster with given samples.
@@ -203,7 +203,7 @@ class Cluster(object):
             result : set
                 Set of NetworkDestinations in cluster.
             """
-        clusters  = set(self.dict_dstIP.values())
+        clusters  = set(self.dict_srcIP.values())
         return clusters
 
     def cluster_dict(self):
