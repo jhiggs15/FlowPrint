@@ -36,7 +36,7 @@ class NetworkDestination(object):
         # Initialise variables
         self.identifier   = identifier
         self.samples      = []
-        self.sources = set()
+        self.dstPorts = set()
         self.labels       = Counter()
 
         # Add each datapoint
@@ -62,7 +62,7 @@ class NetworkDestination(object):
         self.samples.append(X)
         self.labels.update([y])
         # Update pointers
-        self.sources.add(X.source)
+        self.dstPorts.add(X.dport)
 
 
     def merge(self, other):
@@ -78,7 +78,7 @@ class NetworkDestination(object):
             # Merge two NetworkDestinations
             self.samples.extend(other.samples)
             # Merge pointers
-            self.sources = other.sources
+            self.dstPorts = other.dstPorts
             self.labels += other.labels
 
     ########################################################################

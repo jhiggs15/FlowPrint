@@ -33,7 +33,7 @@ def readFiles():
 
 if __name__ == "__main__":
 
-    f = open("datasets/Source.csv", "w")
+    f = open("datasets/DestinationPort.csv", "w")
     f.truncate()
     f.close()
 
@@ -43,7 +43,7 @@ if __name__ == "__main__":
         X,y = readFiles()
 
 
-    for x in range(2):
+    for x in range(100):
         print("iteration {}".format(x))
 
         X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.5)
@@ -91,7 +91,7 @@ if __name__ == "__main__":
         # Print report with 4 digit precision
         report = classification_report(y_test, y_recognize, digits=4, output_dict=True)
 
-        with open('datasets/Source.csv', 'a', newline='') as csvfile:
+        with open('datasets/DestinationPort.csv', 'a', newline='') as csvfile:
             fieldNames = ['accuracy/recall', 'precision', 'f1-score']
             writer = csv.DictWriter(csvfile, fieldnames=fieldNames)
             if x == 0:
