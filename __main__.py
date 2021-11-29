@@ -14,7 +14,7 @@ def loadFiles():
 
 
 def readFiles():
-    dir = "/home/jhiggs/Downloads/pcap/us/android"
+    dir = "/home/jhiggs/Downloads/websitePCAP/TOR"
 
     # Create Preprocessor object
     preprocessor = Preprocessor(verbose=True)
@@ -33,7 +33,7 @@ def readFiles():
 
 if __name__ == "__main__":
 
-    f = open("datasets/Unmodified.csv", "w")
+    f = open("datasets/Destination.csv", "w")
     f.truncate()
     f.close()
 
@@ -90,7 +90,7 @@ if __name__ == "__main__":
         # Print report with 4 digit precision
         report = classification_report(y_test, y_recognize, digits=4, output_dict=True)
 
-        with open('datasets/Unmodified.csv', 'a', newline='') as csvfile:
+        with open('datasets/Destination.csv', 'a', newline='') as csvfile:
             fieldNames = ['accuracy/recall', 'precision', 'f1-score']
             writer = csv.DictWriter(csvfile, fieldnames=fieldNames)
             if x == 0:
